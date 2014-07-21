@@ -27,38 +27,48 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>Nginx匹配规则</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+        <p>基本规则如下:    </p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+        <ol>
+        <li>= 前缀的指令严格匹配这个查询。如果找到，停止搜索。</li>
+        <li>剩下的常规字符串，最长的匹配优先使用。如果这个匹配使用 ^~ 前缀，搜索停止。</li>
+        <li>正则表达式，按配置文件里的顺序，第一个匹配的被使用。</li>
+        <li>如果第三步产生匹配，则使用这个结果。否则使用第二步的匹配结果。</li>
+        </ol>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+        <p>在location中可以使用常规字符串和正则表达式。 <br />
+        如果使用正则表达式，你必须使用以下规则： </p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+        <ol>
+        <li>~* 前缀选择不区分大小写的匹配</li>
+        <li>~  选择区分大小写的匹配</li>
+        </ol>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+        <p>例子：  </p>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
+        <pre><code>location = / {  
+            # 只匹配 / 查询。  
+            [ configuration A ]  
+        }  
+        location / {   
+            # 匹配任何查询，因为所有请求都以 / 开头。  
+            # 但是正则表达式规则和长的块规则将被优先和查询匹配。  
+            [ configuration B ]
+        }  
+        location ^~ /images/ {  
+            # 匹配任何以 /images/ 开头的任何查询并且停止搜索。  
+            # 任何正则表达式将不会被测试。  
+            [ configuration C ]  
+        }  
+        location ~* \.(gif|jpg|jpeg)$ {  
+            # 匹配任何以 gif、jpg 或 jpeg 结尾的请求。  
+            # 然而所有 /images/ 目录的请求将使用 Configuration C。  
+            [ configuration D ]   
+        }  
+        </code></pre>
+     </section>
     </div>
 
     <!-- FOOTER  -->
