@@ -353,11 +353,7 @@ Full-Width Styles
 }
 
 #main_content_wrap {
-  background-image:url('../images/invoker.jpg');
-  background-position:center;
-  background-repeat:repeat-y;
-  background-attachment:fixed;
-  filter:alpha(opacity=80);
+  background: #f2f2f2;
   border-top: 1px solid #111;
   border-bottom: 1px solid #111;
 }
