@@ -357,6 +357,7 @@ Full-Width Styles
   background-position:center;
   background-repeat:repeat-y;
   background-attachment:fixed;
+  filter:alpha(opacity=80);
   border-top: 1px solid #111;
   border-bottom: 1px solid #111;
 }
